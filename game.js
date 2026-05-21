@@ -84,53 +84,58 @@ function createUser(name) {
 
   let reputation = 0; 
   const getReputation = () => reputation; 
-  const giveReputation = () => {reputation++};
+  const giveReputation = () => { reputation++; }; 
 
-  return {name, discordName, getReputation, giveReputation}; 
+  return { name, discordName, giveReputation, getReputation }; 
 } 
 
-const mindlo = createUser('Mindlo') 
+const mindlo = createUser("mindlo"); 
 mindlo.giveReputation(); 
-mindlo.giveReputation(); 
-// console.log(mindlo.getReputation()); 
-//console.log(mindlo); 
 
 console.log({ 
-  discordName: mindlo.discordName, 
-  reputation: mindlo.getReputation()
+  discordName: mindlo.name, 
+  reputation: mindlo.getReputation()  
 }); 
 
-function createPlayer(name, level) { 
-  const {getReputation, giveReputation} = createUser(name); 
+const thamtham = createUser("thamtham"); 
 
-  const increaseLevel = () => {level++; }; 
-
-  return {name, getReputation, giveReputation, increaseLevel, level }; 
-} 
-  
-createPlayer(mindlo); 
-console.log(mindlo);  
-const zPlayer = createPlayer('Zeus', 40); 
-
-zPlayer.giveReputation(); 
-zPlayer.increaseLevel();
-
-console.log(zPlayer.level);
+thamtham.giveReputation(); 
+thamtham.giveReputation(); 
 
 console.log({ 
-  player: zPlayer.name, 
-  level: zPlayer.level, 
-  reputation: zPlayer.getReputation() 
-}) 
+  dischordName: thamtham.name, 
+  reputation: thamtham.getReputation()
+}); 
 
-console.log(zPlayer); 
 
-function makeMultiplier(firstNumber) { 
-  return function returnedFunction(secondNumber) { 
-    return firstNumber * secondNumber; 
-  }
-}
+const calculator = (() => { 
+  let lastResult; 
 
-const multi5 = makeMultiplier(5); 
+  const add = (a, b) => { 
+    lastResult = a + b; 
+    return lastResult; 
+  }; 
 
-console.log(multi5(6)); 
+  const subtract = (a, b) => { 
+    lastResult = a - b; 
+    return lastResult; 
+  }; 
+
+  const multiply = (a, b) => { 
+    lastResult = a * b; 
+    return lastResult; 
+  } 
+
+  const divide = (a, b) => { 
+    lastResult = a / b; 
+    return lastResult; 
+  } 
+
+  const getLastResult = () => lastResult; 
+
+  return { add, subtract, multiply, getLastResult }; 
+})(); 
+
+console.log(calculator.add(3, 5)); 
+console.log(calculator.getLastResult()); 
+  
