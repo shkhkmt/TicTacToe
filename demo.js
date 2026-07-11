@@ -6,29 +6,119 @@ function gameBoard () {
 	for (let i = 0; i < rows; i++) { 
 		board[i] = []; 
 		for (let j = 0; j < columns; j++) {
-			board[i].push(Cell()); 
+			board[i].push(Cell(j)); 
 		} 
 	}
 
 	const getBoard = () =>  board; 
 
-	const printBoard = () => { 
-		const boardWithCellValues = board.map((row) => 
-			row.map((cell) => cell.getValue())
-		);
-	};
-		return {getBoard, printBoard}; 
-} 
+   const dropToken = (column, player) => {
+    // Our board's outermost array represents the row,
+    // so we need to loop through the rows, starting at row 0,
+    // find all the rows that don't have a token, then take the
+    // last one, which will represent the bottom-most empty cell
+    const availableCells = board
+      .filter((row) => row[column].getValue() === 0)
+      .map((row) => row[column]);
 
-const game = gameBoard();
+    // If no cells make it through the filter,
+    // the move is invalid. Stop execution.
+    if (!availableCells.length) return;
+
+    // Otherwise, I have a valid cell, the last one in the filtered array
+    const lowestRow = availableCells.length - 1;
+    board[lowestRow][column].addToken(player);
+  };
+
+ const printBoard = () => {
+    const boardWithCellValues = board.map((row) =>
+      row.map((cell) => cell.getValue())
+    );
+    console.log(boardWithCellValues);
+  };
+
+  return {getBoard, printBoard, dropToken}; 
+}
+
+function createPlayer(name) { 
+	const playerName = name; 
+	let score = 0; 
+	const getScore = () => score; 
+	const giveScore = () => { score++ }; 
+
+	return { 
+		playerName, 
+		getScore, 
+		giveScore, 
+	} 
+} 
 
 
 function Cell () { 
 	let value = 0; 
 	const getValue = () => value; 
-	
+	const addToken = (player) => {
+		value = player; 
+	} 
 	return { 
-		getValue, 
+		getValue, addToken
 	}; 
 } 
+
+function GameController(
+  playerOneName = "Player One",
+  playerTwoName = "Player Two"
+) {
+  const board = gameBoard();
+
+  const players = [
+    {
+      name: playerOneName,
+      token: 1,
+    },
+    {
+      name: playerTwoName,
+      token: 2,
+    },
+  ];
+
+  let activePlayer = players[0];
+
+  const switchPlayerTurn = () => {
+    activePlayer = activePlayer === players[0] ? players[1] : players[0];
+  };
+  const getActivePlayer = () => activePlayer;
+
+  const printNewRound = () => {
+    board.printBoard();
+    console.log(`${getActivePlayer().name}'s turn.`);
+  };
+
+  const playRound = (column) => {
+    // Drop a token for the current player
+    console.log(
+      `Dropping ${getActivePlayer().name}'s token into column ${column}...`
+    );
+    board.dropToken(column, getActivePlayer().token);
+
+    /*  This is where we would check for a winner and handle that logic,
+          such as a win message. */
+
+    // Switch player turn
+    switchPlayerTurn();
+    printNewRound();
+  };
+
+  // Initial play game message
+  printNewRound();
+
+  // For the console version, we will only use playRound, but we will need
+  // getActivePlayer for the UI version, so I'm revealing it now
+  return {
+    playRound,
+    getActivePlayer,
+  };
+}
+
+const game = GameController();
 
