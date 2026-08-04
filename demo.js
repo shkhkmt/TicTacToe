@@ -1,33 +1,106 @@
- const printNewRound = () => {
-    board.printBoard();
-    console.log(`${getActivePlayer().name}'s turn.`);
-  };
+function Gameboard () { 
+  const columns = 3;
+  const rows = 3; 
+  const board = []; 
 
-  const playRound = (column) => {
-    // Drop a token for the current player
-    console.log(
-      `Dropping ${getActivePlayer().name}'s token into column ${column}...`
+  // create 2D array for the state of the game board. 
+
+  for (let i = 0; i < rows; i++) { 
+    board[i] = []; 
+    for (let j = 0; j < columns; j++) { 
+      board[i].push(Block()); 
+    } 
+  }
+
+  const getBoard = () => board; 
+
+  const placeMarker = (column, player) => { 
+
+    const availableBlocks = board
+      .filter((row) => row[column].getValue() === 0)
+      .map((row) => row[column]); 
+
+    if (!availableBlocks.length) return; 
+
+    board[column].placeMarker(player); 
+  }; 
+
+  const printBoard = () => { 
+    const boardWithBlockValues = board.map((row) => 
+      row.map((block) => block.getValue())
     );
-    board.dropToken(column, getActivePlayer().token);
-
-    /*  This is where we would check for a winner and handle that logic,
-          such as a win message. */
-
-    // Switch player turn
-    switchPlayerTurn();
-    printNewRound();
+    console.log(boardWithBlockValues); 
   };
 
-  // Initial play game message
-  printNewRound();
-
-  // For the console version, we will only use playRound, but we will need
-  // getActivePlayer for the UI version, so I'm revealing it now
-  return {
-    playRound,
-    getActivePlayer,
-  };
+  return {getBoard, placeMarker, printBoard }; 
 }
 
-const game = GameController();
 
+function Block() { 
+  let value = 0; 
+
+  const addMarker = (player) => { 
+    value = player; 
+  }; 
+
+  const getValue = () => value; 
+
+  return { 
+    addMarker, 
+    getValue, 
+  }; 
+}
+
+
+function GameController(
+  playerOneName = "Player One", 
+  playerTwoName = "Player Two"
+) { 
+  
+  const board = Gameboard(); 
+
+  const players = [ 
+    {
+      name: playerOneName, 
+      marker: 1, 
+    }, 
+    { 
+      name: playerTwoName, 
+      marker: 2, 
+    } 
+  ]; 
+
+  let activePlayer = players[0]; 
+
+  const switchPlayerTurn = () => { 
+    activePlayer = activePlayer === players[0] ? players[1] : players[0]; 
+  }; 
+
+  const getActivePlayer = () => activePlayer; 
+
+  const printNewRound = () => { 
+    board.printBoard(); 
+
+    console.log(`${getActivePlayer().name}'s turn.`); 
+  }; 
+
+  const playRound = (column) => {
+
+   console.log(
+      `Dropping ${getActivePlayer().name}'s token into column ${column}...`
+    );
+    board.placeMarker(column, getActivePlayer().marker);
+
+  switchPlayerTurn(); 
+  printNewRound(); 
+}; 
+
+printNewRound(); 
+
+return { 
+  playRound, 
+  getActivePlayer, 
+}; 
+} 
+
+const game = GameController(); 
