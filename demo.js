@@ -8,21 +8,20 @@ function Gameboard () {
   for (let i = 0; i < rows; i++) { 
     board[i] = []; 
     for (let j = 0; j < columns; j++) { 
-      board[i].push(Block()); 
+      board[i].push(block()); 
     } 
   }
 
   const getBoard = () => board; 
 
-  const placeMarker = (column, player) => { 
+  const placeMarker = (board, rowIndex, colIndex, objectToInsert) => { 
 
-    const availableBlocks = board
-      .filter((row) => row[column].getValue() === 0)
-      .map((row) => row[column]); 
-
-    if (!availableBlocks.length) return; 
-
-    board[column].placeMarker(player); 
+    if (board[rowIndex]) { 
+      board[rowIndex].splice(colIndex, 1, objectToInsert); 
+    } else { 
+      console.error(`Row at index ${rowIndex} does not exist.`); 
+    } 
+    return board
   }; 
 
   const printBoard = () => { 
@@ -36,7 +35,7 @@ function Gameboard () {
 }
 
 
-function Block() { 
+function block() { 
   let value = 0; 
 
   const addMarker = (player) => { 
@@ -100,6 +99,8 @@ printNewRound();
 return { 
   playRound, 
   getActivePlayer, 
+  players, 
+  board,
 }; 
 } 
 
