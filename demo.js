@@ -75,7 +75,12 @@ function GameController(
     activePlayer = activePlayer === players[0] ? players[1] : players[0]; 
   }; 
 
+  const switchMarker = () => { 
+    activeMarker = activeMarker === players[0] ? players[1].marker : players[0].marker; 
+  }; 
+    
   const getActivePlayer = () => activePlayer; 
+  const getActiveMarker = () => activeMarker; 
 
   const printNewRound = () => { 
     board.printBoard(); 
@@ -83,12 +88,12 @@ function GameController(
     console.log(`${getActivePlayer().name}'s turn.`); 
   }; 
 
-  const playRound = (column) => {
+  const playRound = (board, rowIndex, colIndex, getActiveMarker) => {
 
    console.log(
-      `Dropping ${getActivePlayer().name}'s token into column ${column}...`
+      `Dropping marker`
     );
-    board.placeMarker(column, getActivePlayer().marker);
+    board.placeMarker(board, rowIndex, colIndex, getActiveMarker);
 
   switchPlayerTurn(); 
   printNewRound(); 
@@ -99,6 +104,7 @@ printNewRound();
 return { 
   playRound, 
   getActivePlayer, 
+  getActiveMarker, 
   players, 
   board,
 }; 
