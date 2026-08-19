@@ -1,62 +1,110 @@
-function gameboard () { 
+'use strict'; 
+
+function gameBoard () { 
+  const columns = 3; 
+  const rows = 3; 
+  const board = []; 
+
+  // create 2D array for the gamestate 
+  
+  for (let i = 0; i < rows; i++) { 
+    board[i] = []; 
+    for (let j = 0; j < columns; j++) { 
+      board[i].push(0); 
+    } 
+  } 
+
+  const getBoard = () => board; 
+
+  const placeMarker = (row, col, marker) => { 
+
+    if (board[row]) { 
+      board[row].splice(col, 1, marker); 
+    } 
+    else { 
+      console.error(`Row at index ${row} does not exist.`)
+    } 
+    return board; 
+  }; 
+
+  const printBoard = () => { 
+    const boardWithValues = board.map((row) => 
+      row.map((block) => block.getValue())
+    ); 
+    console.log(boardWithValues); 
+  }
+  return {
+    getBoard, 
+    placeMarker, 
+    printBoard
+  }; 
 } 
 
-function player (name, marker) {  
-  return {name, marker};
+function block () { 
+  let value = 0; 
+
+  const addMarker = (player) => { 
+    value = player; 
+  }; 
+
+  const getValue = () => value; 
+
+  return { 
+    addMarker, 
+    getValue }; 
 } 
 
-const player1 = player('Mangaliso', 'X'); 
 
-console.log(player1); 
+function gameController (
+  playerOneName = "Player One", 
+  playerTwoName = "Player Two", 
+) { 
 
-function game () {
+  const roundBoard = gameBoard(); 
 
+  const players = [
+    {
+      name: playerOneName, 
+      marker: 1, 
+    }, 
+    {
+      name: playerTwoName, 
+      marker: 2, 
+    }
+  ]; 
+
+  let activePlayer = players[0]; 
+
+  const switchTurn = () => { 
+    activePlayer = activePlayer === players[0] ? players[1] : players[0]; 
+  }; 
+
+  const getActivePlayer = () => activePlayer; 
+
+  const printNewRound = () => roundBoard.getBoard();
+
+  console.log(`${getActivePlayer().name}'s turn.`); 
+
+const playRound = (row, col) => {
+  console.log(`Placing ${getActivePlayer().name}'s marker`); 
+
+  let mark = getActivePlayer().marker; 
+  console.log(mark);
+  console.log(row); 
+  console.log(col) 
+  roundBoard.placeMarker(row, col, mark); 
+  printNewRound(); 
+  switchTurn(); 
+  }; 
+
+printNewRound(); 
+roundBoard.getBoard(); 
+
+return {
+  playRound, 
+  getActivePlayer, 
+  roundBoard, 
+}; 
 }
 
-// This is a global variable 
-
-let globalAge = 23; 
-
-// This is a function and a curly brace pair indicating a block 
-
-function printAge(age) { 
-  // This is a function scoped variable. 
-  var varAge = 34; 
-
-  // This is another curly brace i.e., a block 
-  if (age > 0) { 
-    // This is a block-scoped variable that exists within 
-    // the nearest enclosing block: the if's block. 
-    const constAge = age * 2; 
-    console.log(constAge); 
-  } 
-
-  // ERROR! We tried to access a block scoped variable outside it's scope. 
-  console.log(varAge); 
-} 
-
-printAge(globalAge); 
-
-// ERROR! We tried to access a function scoped variable outside
-// the function it's defined in. 
-
-function makeAddingFunction(firstNumber) { 
-  // firstNumber is scoped anywher within makeAddingFunction, including 
-  // the returned function. 
-  // any variables declared here will also be accessible within the returned
-  // function. 
-
-  // We don't need to name the returned function 
-  // this is just to reference more easily in the explanation
-  return function returnedFunction(secondNumber) { 
-    // secondNumber is scoped only within the returnedFunction
-    return firstNumber + secondNumber; 
-  } 
-} 
-
-const add5 = makeAddingFunction(5); 
-console.log(add5(15)); 
-
-const add12345 = makeAddingFunction(12345); 
-
-console.log(add12345(166)); 
+const game = gameController(); 

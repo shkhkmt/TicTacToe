@@ -15,9 +15,9 @@ function Gameboard () {
   const getBoard = () => board; 
 
   const placeMarker = (board, rowIndex, colIndex, objectToInsert) => { 
-
+    
     if (board[rowIndex]) { 
-      board[rowIndex].splice(colIndex, 1, objectToInsert); 
+          board[rowIndex].push(objectToInsert); 
     } else { 
       console.error(`Row at index ${rowIndex} does not exist.`); 
     } 
@@ -56,7 +56,7 @@ function GameController(
   playerTwoName = "Player Two"
 ) { 
   
-  const board = Gameboard(); 
+  const roundBoard = Gameboard(); 
 
   const players = [ 
     {
@@ -75,28 +75,24 @@ function GameController(
     activePlayer = activePlayer === players[0] ? players[1] : players[0]; 
   }; 
 
-  const switchMarker = () => { 
-    activeMarker = activeMarker === players[0] ? players[1].marker : players[0].marker; 
-  }; 
-    
   const getActivePlayer = () => activePlayer; 
-  const getActiveMarker = () => activeMarker; 
 
   const printNewRound = () => { 
-    board.printBoard(); 
+    roundBoard.printBoard(); 
 
     console.log(`${getActivePlayer().name}'s turn.`); 
   }; 
 
-  const playRound = (board, rowIndex, colIndex, getActiveMarker) => {
-
+  const playRound = (rowIndex, colIndex) => {
    console.log(
-      `Dropping marker`
+      'Dropping marker'
     );
-    board.placeMarker(board, rowIndex, colIndex, getActiveMarker);
+    
+        let player = activePlayer.marker; 
+    roundBoard.placeMarker(roundBoard.getBoard(), rowIndex, colIndex, player);
 
-  switchPlayerTurn(); 
   printNewRound(); 
+  switchPlayerTurn(); 
 }; 
 
 printNewRound(); 
@@ -104,9 +100,8 @@ printNewRound();
 return { 
   playRound, 
   getActivePlayer, 
-  getActiveMarker, 
   players, 
-  board,
+  roundBoard,
 }; 
 } 
 
