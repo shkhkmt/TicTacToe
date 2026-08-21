@@ -54,6 +54,19 @@ function block () {
     getValue }; 
 } 
 
+function checkWinner(roundBoard) {
+  const currentState = roundBoard; 
+  let winner;
+  let result; 
+  if (currentState[0][1] === 1 && currentState[0][2] === 1 && currentState[0][0] === 1) {
+    winner = 'Player One';
+    console.log(`${winner} wins!`);
+    result = true; 
+  }
+  return result; 
+} 
+
+
 
 function gameController (
   playerOneName = "Player One", 
@@ -81,7 +94,6 @@ function gameController (
 
   const getActivePlayer = () => activePlayer; 
 
-  const printNewRound = () => roundBoard.getBoard();
 
   console.log(`${getActivePlayer().name}'s turn.`); 
 
@@ -89,21 +101,19 @@ const playRound = (row, col) => {
   console.log(`Placing ${getActivePlayer().name}'s marker`); 
 
   let mark = getActivePlayer().marker; 
-  console.log(mark);
-  console.log(row); 
-  console.log(col) 
-  roundBoard.placeMarker(row, col, mark); 
-  printNewRound(); 
+  roundBoard.placeMarker(row, col, mark);
+  if (checkWinner(roundBoard.getBoard()) === true) { 
+    console.log(`${getActivePlayer().name} wins'`)
+    roundBoard.getBoard().fill([0, 0, 0]); 
+  }
   switchTurn(); 
+  roundBoard.getBoard(); 
+  console.log(roundBoard.getBoard()); 
   }; 
-
-printNewRound(); 
-roundBoard.getBoard(); 
 
 return {
   playRound, 
   getActivePlayer, 
-  roundBoard, 
 }; 
 }
 
