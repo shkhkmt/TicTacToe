@@ -73,7 +73,7 @@ function gameController (
   playerTwoName = "Player Two", 
 ) { 
 
-  const roundBoard = gameBoard(); 
+  let roundBoard = gameBoard(); 
 
   const players = [
     {
@@ -104,7 +104,8 @@ const playRound = (row, col) => {
   roundBoard.placeMarker(row, col, mark);
   if (checkWinner(roundBoard.getBoard()) === true) { 
     console.log(`${getActivePlayer().name} wins'`)
-    roundBoard.getBoard().fill([0, 0, 0]); 
+    roundBoard = gameBoard();
+    switchTurn(); 
   }
   switchTurn(); 
   roundBoard.getBoard(); 
