@@ -1,0 +1,214 @@
+/* ===== Reset & base ===== */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: radial-gradient(circle at top, #2d2d44 0%, #1e1e2f 70%);
+  color: #f0f0f0;
+  padding: 1rem;
+}
+
+/* ===== Layout ===== */
+.content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+  width: 100%;
+  max-width: 720px;
+}
+
+.header {
+  min-height: 2.5rem;
+  font-size: 1.75rem;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-align: center;
+  color: #ffd166;
+  text-shadow: 0 0 12px rgba(255, 209, 102, 0.45);
+  transition: color 0.3s ease;
+}
+
+.game {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 2.5rem;
+  flex-wrap: wrap;
+}
+
+/* ===== Players panel ===== */
+.players {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  min-width: 190px;
+}
+
+.players h2 {
+  padding: 0.75rem 1.1rem;
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-align: center;
+  border-radius: 10px;
+  background-color: #2d2d44;
+  border: 2px solid #3d3d5c;
+  color: #b8b8cc;
+  transition: transform 0.25s ease, box-shadow 0.25s ease,
+              color 0.25s ease, border-color 0.25s ease;
+}
+
+#playerOne { border-color: rgba(76, 201, 240, 0.4); }
+#playerTwo { border-color: rgba(247, 37, 133, 0.4); }
+
+#playerOne.active {
+  color: #4cc9f0;
+  border-color: #4cc9f0;
+  background-color: #223047;
+  transform: translateX(6px);
+  box-shadow: 0 0 18px rgba(76, 201, 240, 0.55);
+}
+
+#playerTwo.active {
+  color: #f72585;
+  border-color: #f72585;
+  background-color: #38223a;
+  transform: translateX(6px);
+  box-shadow: 0 0 18px rgba(247, 37, 133, 0.55);
+}
+
+/* ===== Play button ===== */
+#Play {
+  margin-top: 0.5rem;
+  padding: 0.85rem 1.25rem;
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #1e1e2f;
+  background: linear-gradient(135deg, #ffd166 0%, #ffb703 100%);
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.2s ease;
+}
+
+#Play:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 22px rgba(255, 183, 3, 0.5);
+}
+
+#Play:active {
+  transform: translateY(0);
+  box-shadow: 0 3px 10px rgba(255, 183, 3, 0.4);
+}
+
+#Play:focus-visible {
+  outline: 3px solid #4cc9f0;
+  outline-offset: 3px;
+}
+
+/* ===== Board ===== */
+.board {
+  display: grid;
+  grid-template-columns: repeat(3, 110px);
+  grid-template-rows: repeat(3, 110px);
+  gap: 10px;
+  padding: 14px;
+  border-radius: 16px;
+  background-color: #2d2d44;
+  box-shadow:
+    0 12px 35px rgba(0, 0, 0, 0.55),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.04);
+}
+
+.board > div {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 3rem;
+  font-weight: 800;
+  font-family: 'Segoe UI', Tahoma, sans-serif;
+  line-height: 1;
+  background-color: #1e1e2f;
+  border-radius: 10px;
+  cursor: pointer;
+  user-select: none;
+  transition: background-color 0.2s ease, transform 0.12s ease,
+              box-shadow 0.2s ease;
+}
+
+.board > div:hover {
+  background-color: #26263a;
+  transform: translateY(-2px);
+}
+
+.board > div:active {
+  transform: translateY(0) scale(0.98);
+}
+
+/* Marker colors */
+.board > div.x {
+  color: #4cc9f0;
+  text-shadow: 0 0 14px rgba(76, 201, 240, 0.6);
+}
+
+.board > div.o {
+  color: #f72585;
+  text-shadow: 0 0 14px rgba(247, 37, 133, 0.6);
+}
+
+/* Locked-in cells feel less clickable */
+.board > div.x,
+.board > div.o {
+  cursor: default;
+}
+
+.board > div.x:hover,
+.board > div.o:hover {
+  background-color: #1e1e2f;
+  transform: none;
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 640px) {
+  .game {
+    flex-direction: column-reverse;
+    gap: 1.75rem;
+  }
+
+  .players {
+    width: 100%;
+    max-width: 340px;
+  }
+
+  .players h2.active {
+    transform: none;
+  }
+
+  .board {
+    grid-template-columns: repeat(3, 88px);
+    grid-template-rows: repeat(3, 88px);
+    gap: 8px;
+    padding: 10px;
+  }
+
+  .board > div {
+    font-size: 2.4rem;
+  }
+
+  .header {
+    font-size: 1.4rem;
+  }
+}
+
