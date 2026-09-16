@@ -1,11 +1,13 @@
 'use strict';
 
 const displayController = (() => {
-  const boardEl     = document.querySelector('.board');
-  const headerEl    = document.querySelector('.header');
+  // Elements for the UI 
+  const boardEl = document.querySelector('.board');
+  const headerEl = document.querySelector('.header');
   const playerOneEl = document.querySelector('#playerOne');
   const playerTwoEl = document.querySelector('#playerTwo');
-  const playBtn     = document.querySelector('#Play');
+  const playBtn = document.querySelector('#Play');
+ 
 
   const cells = [];
   for (let i = 0; i < 9; i++) {
@@ -16,6 +18,9 @@ const displayController = (() => {
 
   const TEXT  = { 0: '', 1: 'X', 2: 'O' };
   const CLASS = { 0: null, 1: 'x', 2: 'o' };
+
+  // Create a container for the board, and render the items that correspond to a playe's value in the gameBoard() 
+  // function
 
   const renderBoard = (board) => {
     for (let row = 0; row < 3; row++) {
@@ -29,8 +34,10 @@ const displayController = (() => {
       }
     }
   };
+  
+  // Arrow functions to mutate the text on the page 
 
-  const updateMessage     = (msg)    => { headerEl.textContent = msg; };
+  const updateMessage = (msg) => { headerEl.textContent = msg; };
   const updatePlayerNames = (p1, p2) => {
     playerOneEl.textContent = p1;
     playerTwoEl.textContent = p2;
@@ -39,6 +46,9 @@ const displayController = (() => {
     playerOneEl.classList.toggle('active', marker === 1);
     playerTwoEl.classList.toggle('active', marker === 2);
   };
+
+  // Click event handler 
+
   const onCellClick = (handler) => {
     cells.forEach((cell, i) => {
       cell.addEventListener('click', () => handler(Math.floor(i / 3), i % 3));
@@ -59,6 +69,8 @@ const displayController = (() => {
 
 
 function gameBoard() {
+  // set values for the array's size and then push a zero value to it. 
+
   const columns = 3;
   const rows = 3;
   const board = [];
@@ -71,6 +83,9 @@ function gameBoard() {
   }
 
   const getBoard = () => board;
+  
+  // check if the board has a value at the selected index and that the value is within the array's 
+  // default length, then place the marker and return the new board. 
 
   const placeMarker = (row, col, marker) => {
     if (row < 0 || row > 2 || col < 0 || col > 2) return "Block not allowed";
@@ -81,7 +96,12 @@ function gameBoard() {
 
   const isFull = () => board.every(row => row.every(cell => cell !== 0));
 
-  return { getBoard, placeMarker, isFull };
+  return { 
+    getBoard, 
+    placeMarker, 
+    isFull 
+
+  };
 }
 
 function checkWinner(roundBoard) {
